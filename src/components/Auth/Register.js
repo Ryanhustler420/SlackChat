@@ -11,6 +11,7 @@ import {
 import {Link} from 'react-router-dom';
 
 import firebase from '../../firebase';
+import md5 from 'md5';
 
 class Register extends Component {
   state = {
@@ -20,6 +21,7 @@ class Register extends Component {
     passwordConfirmation: '',
     errors: [],
     loading: false,
+    userRef: firebase.database ().ref ('users'),
   };
 
   displayErrors = errors =>
@@ -81,7 +83,24 @@ class Register extends Component {
       .createUserWithEmailAndPassword (this.state.email, this.state.password)
       .then (createdUser => {
         console.log (createdUser);
-        this.setState ({loading: false});
+        createdUser.user
+          .updateProfile ({
+            displayName: this.state.username,
+            photoURL: `http://gravatar.com/avatar/${md5 (createdUser.user.email)}?d=identicon`,
+          })
+          .then (() => {
+            this.saveUser (createdUser).then (() => {
+              // console.log ('User save');
+              this.setState ({loading: false});
+            });
+          })
+          .catch (err => {
+            console.log (err);
+            this.setState ({
+              errors: this.state.errors.concat (err),
+              loading: false,
+            });
+          });
       })
       .catch (err => {
         this.setState ({
@@ -89,6 +108,14 @@ class Register extends Component {
           loading: false,
         });
       });
+  };
+
+  saveUser = createUser => {
+    // Go to firebase -> database ->  Create database -> Start in test mode -> enable
+    return this.state.userRef.child (createUser.user.uid).set ({
+      name: createUser.user.displayName,
+      avatar: createUser.user.photoURL,
+    });
   };
 
   handleInputError = (errors, inputName) => {
