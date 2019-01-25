@@ -19,6 +19,7 @@ class Register extends Component {
     password: '',
     passwordConfirmation: '',
     errors: [],
+    loading: false,
   };
 
   displayErrors = errors =>
@@ -74,13 +75,28 @@ class Register extends Component {
       return;
     }
     event.preventDefault ();
+    this.setState ({errors: [], loading: true});
     firebase
       .auth ()
       .createUserWithEmailAndPassword (this.state.email, this.state.password)
       .then (createdUser => {
         console.log (createdUser);
+        this.setState ({loading: false});
       })
-      .catch (err => console.log);
+      .catch (err => {
+        this.setState ({
+          errors: this.state.errors.concat (err),
+          loading: false,
+        });
+      });
+  };
+
+  handleInputError = (errors, inputName) => {
+    return errors.some (error =>
+      error.message.toLowerCase ().includes (inputName)
+    )
+      ? 'error'
+      : '';
   };
 
   render () {
@@ -90,6 +106,7 @@ class Register extends Component {
       password,
       passwordConfirmation,
       errors,
+      loading,
     } = this.state;
 
     return (
@@ -119,6 +136,7 @@ class Register extends Component {
                 placeholder="Email Address"
                 onChange={this.handleChange}
                 value={email}
+                className={this.handleInputError (errors, 'email')}
                 type="email"
               />
 
@@ -130,6 +148,7 @@ class Register extends Component {
                 placeholder="Password"
                 onChange={this.handleChange}
                 value={password}
+                className={this.handleInputError (errors, 'password')}
                 type="password"
               />
 
@@ -141,10 +160,19 @@ class Register extends Component {
                 placeholder="Password Confirmation"
                 onChange={this.handleChange}
                 value={passwordConfirmation}
+                className={this.handleInputError (errors, 'password')}
                 type="password"
               />
 
-              <Button color="black" fluid size="large">Submit To God</Button>
+              <Button
+                className={loading ? 'loading' : ''}
+                disabled={loading}
+                color="black"
+                fluid
+                size="large"
+              >
+                Submit To God
+              </Button>
               <Message>
                 Already an user? <Link to="/login">Login</Link>{' '}
               </Message>
