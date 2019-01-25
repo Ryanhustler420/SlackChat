@@ -139,7 +139,7 @@ class Register extends Component {
     return (
       <Grid textAlign="center" verticalAlign="middle" className="app">
         <Grid.Column style={{maxWidth: 450}}>
-          <Header as="h2" icon color="black" textAlign="center">
+          <Header as="h1" icon color="black" textAlign="center">
             <Icon name="connectdevelop" color="black" />
             Register for Dev's Network
           </Header>
