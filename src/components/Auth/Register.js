@@ -12,6 +12,8 @@ import {Link} from 'react-router-dom';
 
 import firebase from '../../firebase';
 import md5 from 'md5';
+import {setUser} from '../../actions';
+import {connect} from 'react-redux';
 
 class Register extends Component {
   state = {
@@ -92,6 +94,8 @@ class Register extends Component {
             this.saveUser (createdUser).then (() => {
               // console.log ('User save');
               this.setState ({loading: false});
+              // update redux state before redirecting
+              this.props.setUser (createdUser);
             });
           })
           .catch (err => {
@@ -216,4 +220,4 @@ class Register extends Component {
   }
 }
 
-export default Register;
+export default connect (null, {setUser}) (Register);
