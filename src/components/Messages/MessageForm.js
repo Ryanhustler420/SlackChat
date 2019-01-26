@@ -13,6 +13,10 @@ class MessageForm extends Component {
     modal: false,
   };
 
+  uploadFile = (file, metadata) => {
+    console.log (file, metadata);
+  };
+
   openModal = () => this.setState ({modal: true});
 
   closeModal = () => this.setState ({modal: false});
@@ -102,7 +106,11 @@ class MessageForm extends Component {
             labelPosition="right"
             icon="cloud upload"
           />
-          <FileModal modal={modal} closeModal={this.closeModal} />
+          <FileModal
+            modal={modal}
+            uploadFile={this.uploadFile}
+            closeModal={this.closeModal}
+          />
         </Button.Group>
       </Segment>
     );
