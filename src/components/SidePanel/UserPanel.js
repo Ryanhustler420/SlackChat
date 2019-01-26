@@ -3,10 +3,24 @@ import {Grid, Header, Icon, Label, Dropdown} from 'semantic-ui-react';
 import firebase from './../../firebase';
 
 class UserPanel extends Component {
+  state = {
+    user: this.props.currentUser,
+  };
+
+  // componentWillReceiveProps (nexProps) {
+  //   this.setState ({user: nexProps.currentUser});
+  // }
+
+  // componentDidMount () {
+  //   this.setState ({user: this.props.currentUser});
+  // }
+
   dropDownOptions = () => [
     {
       key: 'user',
-      text: <span>Signed in as <strong>User</strong></span>,
+      text: (
+        <span>Signed in as <strong>{this.state.user.displayName}</strong></span>
+      ),
       disabled: true,
     },
     {
@@ -20,13 +34,10 @@ class UserPanel extends Component {
   ];
 
   handleSignout = () => {
-      firebase
-      .auth()
-      .signOut()
-      .then(() => {
-          console.log('Signout');
-      })
-  }
+    firebase.auth ().signOut ().then (() => {
+      console.log ('Signout');
+    });
+  };
 
   render () {
     return (
@@ -39,19 +50,25 @@ class UserPanel extends Component {
               <Header.Content>
                 Dev's Network
               </Header.Content>
-              <Label as="a" image>
-                <img src="https://avatars2.githubusercontent.com/u/25275856?s=460&v=4" alt="avatar"/>
-                <Icon name="superpowers" />Gaurav Gupta
-              </Label>
-              {/* <Label>
-                Creator
-              </Label> */}
+              {this.state.user.uid === 'MLlT7BWq7iSi7piDNT68JXB8yhC2' &&
+                <React.Fragment>
+                  <Label as="a" image>
+                    <img
+                      src="https://avatars2.githubusercontent.com/u/25275856?s=460&v=4"
+                      alt="avatar"
+                    />
+                    <Icon name="superpowers" />Gaurav Gupta
+                  </Label>
+                  <Label>
+                    Creator
+                  </Label>
+                </React.Fragment>}
             </Header>
           </Grid.Row>
           {/* User Dropdown */}
           <Header style={{padding: '0.25em'}} as="h4" inverted>
             <Dropdown
-              trigger={<span>User</span>}
+              trigger={<span>{this.state.user.displayName}</span>}
               options={this.dropDownOptions ()}
             />
           </Header>
