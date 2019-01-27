@@ -15,7 +15,7 @@ body,
 /* Messages.js */
 
 .messages {
-    height: 62vh;
+    height: 58vh;
     overflow-y: scroll;
 }
 

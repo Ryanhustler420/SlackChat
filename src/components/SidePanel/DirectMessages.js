@@ -71,7 +71,7 @@ class DirectMessages extends Component {
   isUserOnline = user => user.status === 'online';
 
   changeChannel = user => {
-    const channelId = this.getChannelId (user.id);
+    const channelId = this.getChannelId (user.uid);
     const channelData = {
       id: channelId,
       name: user.name,
