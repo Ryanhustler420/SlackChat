@@ -52,8 +52,8 @@ const channel_reducer = (state = inititalChannelState, action) => {
 };
 
 const initialColorState = {
-  primayColor: '',
-  secondaryColor: '',
+  primaryColor: '#4c3c4c',
+  secondaryColor: '#eee',
 };
 
 const colors_reducer = (state = initialColorState, action) => {
@@ -61,7 +61,7 @@ const colors_reducer = (state = initialColorState, action) => {
     case actionTypes.SET_COLORS:
       return {
         ...state,
-        primayColor: action.payload.primayColor,
+        primaryColor: action.payload.primaryColor,
         secondaryColor: action.payload.secondaryColor,
       };
     default:

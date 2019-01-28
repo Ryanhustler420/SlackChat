@@ -49,11 +49,11 @@ export const setUserPost = userPosts => {
 
 // Colors Actions
 
-export const setColors = (primayColor, secondaryColor) => {
+export const setColors = (primaryColor, secondaryColor) => {
   return {
     type: actionTypes.SET_COLORS,
     payload: {
-      primayColor,
+      primaryColor,
       secondaryColor,
     },
   };
