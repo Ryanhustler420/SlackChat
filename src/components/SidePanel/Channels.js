@@ -17,6 +17,7 @@ class Channels extends Component {
     activeChannel: '',
     messagesRef: firebase.database ().ref ('messages'),
     notifications: [],
+    typingRef: firebase.database ().ref ('typing'),
   };
 
   componentDidMount () {
@@ -118,6 +119,10 @@ class Channels extends Component {
     this.props.setPrivateChannel (false);
     this.setState ({channel});
     this.clearNotifications ();
+    this.state.typingRef
+      .child (this.state.channel.id)
+      .child (this.state.user.uid)
+      .remove ();
   };
 
   dispalyChannels = channels =>
