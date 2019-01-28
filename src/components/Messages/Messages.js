@@ -29,8 +29,24 @@ class Messages extends Component {
 
     if (channel && user) {
       this.addListeners (channel.id);
+      this.addUserStarsListener (channel.id, user.uid);
     }
   }
+
+  addUserStarsListener = (channelId, userId) => {
+    this.state.userRef
+      .child (userId)
+      .child ('starred')
+      .once ('value')
+      .then (data => {
+        if (data.val () !== null) {
+          // console.log (Object.keys (data.val ()));
+          const channelIds = Object.keys (data.val ());
+          const prevStarred = channelIds.includes (channelId);
+          this.setState ({isChannelStarrd: prevStarred});
+        }
+      });
+  };
 
   addListeners = channelID => {
     this.addMessageListener (channelID);
