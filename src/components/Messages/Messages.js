@@ -20,6 +20,8 @@ class Messages extends Component {
     searchTerm: '',
     searchLoading: false,
     searchResult: [],
+    isChannelStarrd: false,
+    userRef: firebase.database ().ref ('users'),
   };
 
   componentDidMount () {
@@ -112,6 +114,41 @@ class Messages extends Component {
       : '';
   };
 
+  handleStar = () => {
+    this.setState (
+      prevState => ({
+        isChannelStarrd: !prevState.isChannelStarrd,
+      }),
+      () => this.starChannel ()
+    );
+  };
+
+  starChannel = () => {
+    if (this.state.isChannelStarrd) {
+      // console.log ('star');
+      this.state.userRef.child (`${this.state.user.uid}/starred`).update ({
+        [this.state.channel.id]: {
+          name: this.state.channel.name,
+          details: this.state.channel.details,
+          createdBy: {
+            name: this.state.channel.createdBy.name,
+            avatar: this.state.channel.createdBy.avatar,
+          },
+        },
+      });
+    } else {
+      // console.log ('unstar');
+      this.state.userRef
+        .child (`${this.state.user.uid}/starred`)
+        .child (this.state.channel.id)
+        .remove (err => {
+          if (err !== null) {
+            console.log (err);
+          }
+        });
+    }
+  };
+
   render () {
     // prettier-ignore
     const {
@@ -124,7 +161,8 @@ class Messages extends Component {
       searchTerm,
       searchResult,
       searchLoading,
-      privateChannel
+      privateChannel,
+      isChannelStarrd
     } = this.state;
 
     return (
@@ -135,6 +173,8 @@ class Messages extends Component {
           handleSearchChange={this.handleSearchChange}
           searchLoading={searchLoading}
           isPrivateChannel={privateChannel}
+          handleStar={this.handleStar}
+          isChannelStarrd={isChannelStarrd}
         />
 
         <Segment>
