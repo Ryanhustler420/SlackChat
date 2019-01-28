@@ -3,6 +3,7 @@ import {Segment, Accordion, Header, Icon} from 'semantic-ui-react';
 
 class MetaPanel extends Component {
   state = {
+    privateChannel: this.props.isPrivateChannel,
     activeIndex: 0,
   };
 
@@ -14,7 +15,10 @@ class MetaPanel extends Component {
   };
 
   render () {
-    const {activeIndex} = this.state;
+    const {activeIndex, privateChannel} = this.state;
+
+    if (privateChannel) return null;
+
     return (
       <Segment>
         <Header as="h3" attached="top">
