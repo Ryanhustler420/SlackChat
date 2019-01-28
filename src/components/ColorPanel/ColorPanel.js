@@ -12,12 +12,15 @@ import {
 } from 'semantic-ui-react';
 
 import {SketchPicker} from 'react-color';
+import firebase from './../../firebase';
 
 class ColorPanel extends Component {
   state = {
     modal: false,
     primary: '',
     secondary: '',
+    user: this.props.currentUser,
+    usersRef: firebase.database ().ref ('users'),
   };
 
   openModal = () => this.setState ({modal: true});
@@ -29,6 +32,29 @@ class ColorPanel extends Component {
 
   handleChangeSecondaryColor = color => {
     this.setState ({secondary: color.hex});
+  };
+
+  handleSaveColors = () => {
+    if (this.state.primary && this.state.secondary) {
+      this.saveColors (this.state.primary, this.state.secondary);
+    }
+  };
+
+  saveColors = (primary, secondary) => {
+    this.state.usersRef
+      .child (`${this.state.user.uid}/colors`)
+      .push ()
+      .update ({
+        primary,
+        secondary,
+      })
+      .then (() => {
+        console.log ('Colors added');
+        this.closeModal ();
+      })
+      .catch (err => {
+        console.error (err);
+      });
   };
 
   render () {
@@ -80,7 +106,7 @@ class ColorPanel extends Component {
             </Grid>
           </Modal.Content>
           <Modal.Actions>
-            <Button color="green" inverted>
+            <Button color="green" inverted onClick={this.handleSaveColors}>
               <Icon name="checkmark" /> Save Colors
             </Button>
             <Button color="red" inverted onClick={this.closeModal}>
