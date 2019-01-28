@@ -91,7 +91,7 @@ class Channels extends Component {
     this.setState ({firstLoad: false});
   };
 
-  setActionChannel = channel => {
+  setActiveChannel = channel => {
     this.setState ({activeChannel: channel});
   };
 
@@ -111,7 +111,7 @@ class Channels extends Component {
   };
 
   changeChannel = channel => {
-    this.setActionChannel (channel);
+    this.setActiveChannel (channel);
     this.props.setCurrentChannel (channel);
     this.props.setPrivateChannel (false);
     this.setState ({channel});
