@@ -8,6 +8,7 @@ import {
   Icon,
   Label,
   Grid,
+  Segment,
 } from 'semantic-ui-react';
 
 import {SketchPicker} from 'react-color';
@@ -15,13 +16,23 @@ import {SketchPicker} from 'react-color';
 class ColorPanel extends Component {
   state = {
     modal: false,
+    primary: '',
+    secondary: '',
   };
 
   openModal = () => this.setState ({modal: true});
   closeModal = () => this.setState ({modal: false});
 
+  handleChangePrimaryColor = color => {
+    this.setState ({primary: color.hex});
+  };
+
+  handleChangeSecondaryColor = color => {
+    this.setState ({secondary: color.hex});
+  };
+
   render () {
-    const {modal} = this.state;
+    const {modal, primary, secondary} = this.state;
     return (
       <Sidebar
         as={Menu}
@@ -42,12 +53,28 @@ class ColorPanel extends Component {
             <Grid columns={2} divided>
               <Grid.Row>
                 <Grid.Column>
-                  <Label content="Primary Color" style={{marginBottom: '10px'}} />
-                  <SketchPicker />
+                  <Segment inverted>
+                    <Label
+                      content="Primary Color"
+                      style={{marginBottom: '10px'}}
+                    />
+                    <SketchPicker
+                      onChange={this.handleChangePrimaryColor}
+                      color={primary}
+                    />
+                  </Segment>
                 </Grid.Column>
                 <Grid.Column>
-                  <Label content="Secondary Color" style={{marginBottom: '10px'}} />
-                  <SketchPicker />
+                  <Segment inverted>
+                    <Label
+                      content="Secondary Color"
+                      style={{marginBottom: '10px'}}
+                    />
+                    <SketchPicker
+                      onChange={this.handleChangeSecondaryColor}
+                      color={secondary}
+                    />
+                  </Segment>
                 </Grid.Column>
               </Grid.Row>
             </Grid>
