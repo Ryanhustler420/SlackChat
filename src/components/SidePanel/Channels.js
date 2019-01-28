@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Menu, Icon, Modal, Form, Input, Button} from 'semantic-ui-react';
+import {Menu, Icon, Modal, Form, Input, Button, Label} from 'semantic-ui-react';
 import firebase from './../../firebase';
 import {connect} from 'react-redux';
 import {setCurrentChannel, setPrivateChannel} from '../../actions';
@@ -7,6 +7,7 @@ import {setCurrentChannel, setPrivateChannel} from '../../actions';
 class Channels extends Component {
   state = {
     user: this.props.currentUser,
+    channel: null,
     channels: [],
     modal: false,
     channelName: '',
@@ -14,6 +15,8 @@ class Channels extends Component {
     channelsRef: firebase.database ().ref ('channels'),
     firstLoad: true,
     activeChannel: '',
+    messagesRef: firebase.database ().ref ('messages'),
+    notifications: [],
   };
 
   componentDidMount () {
@@ -36,7 +39,48 @@ class Channels extends Component {
       this.setState ({channels: loadedChannels}, () => {
         this.setFirstChannel ();
       });
+      this.addNotificationListener (snap.key);
     });
+  };
+
+  addNotificationListener = channelId => {
+    this.state.messagesRef.child (channelId).on ('value', snap => {
+      if (this.state.channel) {
+        this.handleNotifications (
+          channelId,
+          this.state.channel.id,
+          this.state.notifications,
+          snap
+        );
+      }
+    });
+  };
+
+  handleNotifications = (channelId, currentChennelId, notifications, snap) => {
+    let lastTotal = 0;
+
+    let index = notifications.findIndex (
+      notification_ => notification_.id === channelId
+    );
+
+    if (index !== -1) {
+      lastTotal = notifications[index].total;
+
+      if (snap.numChildren () - lastTotal > 0) {
+        notifications[index].count = snap.numChildren () - lastTotal;
+      }
+
+      notifications[index].lastKnowTotal = snap.numChildren ();
+    } else {
+      notifications.push ({
+        id: channelId,
+        total: snap.numChildren (),
+        lastKnowTotal: snap.numChildren (),
+        count: 0,
+      });
+    }
+
+    this.setState ({notifications});
   };
 
   setFirstChannel = () => {
@@ -51,10 +95,27 @@ class Channels extends Component {
     this.setState ({activeChannel: channel});
   };
 
+  clearNotifications = () => {
+    let index = this.state.notifications.findIndex (
+      notification_ => notification_.id === this.state.channel.id
+    );
+
+    if (index !== -1) {
+      let updatedNotifications = [...this.state.notifications];
+      updatedNotifications[index].total = this.state.notifications[
+        index
+      ].lastKnowTotal;
+      updatedNotifications[index].count = 0;
+      this.setState ({notifications: updatedNotifications});
+    }
+  };
+
   changeChannel = channel => {
     this.setActionChannel (channel);
     this.props.setCurrentChannel (channel);
     this.props.setPrivateChannel (false);
+    this.setState ({channel});
+    this.clearNotifications ();
   };
 
   dispalyChannels = channels =>
@@ -67,9 +128,23 @@ class Channels extends Component {
         style={{opacity: 0.7}}
         active={channel.id === this.state.activeChannel.id}
       >
+        {this.getNotificationCount (channel) &&
+          <Label color="red">{this.getNotificationCount (channel)}</Label>}
         # {channel.name}
       </Menu.Item>
     ));
+
+  getNotificationCount = channel => {
+    let count = 0;
+
+    this.state.notifications.forEach (notification_ => {
+      if (notification_.id === channel.id) {
+        count = notification_.count;
+      }
+    });
+
+    if (count > 0) return count;
+  };
 
   // check out firease for schema design
   addChannel = () => {
