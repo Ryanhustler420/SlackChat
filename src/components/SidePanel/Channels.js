@@ -64,10 +64,12 @@ class Channels extends Component {
     );
 
     if (index !== -1) {
-      lastTotal = notifications[index].total;
+      if (channelId !== currentChennelId) {
+        lastTotal = notifications[index].total;
 
-      if (snap.numChildren () - lastTotal > 0) {
-        notifications[index].count = snap.numChildren () - lastTotal;
+        if (snap.numChildren () - lastTotal > 0) {
+          notifications[index].count = snap.numChildren () - lastTotal;
+        }
       }
 
       notifications[index].lastKnowTotal = snap.numChildren ();
