@@ -13,6 +13,8 @@ import {
 
 import {SketchPicker} from 'react-color';
 import firebase from './../../firebase';
+import {connect} from 'react-redux';
+import {setColors} from '../../actions';
 
 class ColorPanel extends Component {
   state = {
@@ -78,7 +80,10 @@ class ColorPanel extends Component {
     userColors.map ((color, i) => (
       <React.Fragment key={i}>
         <Divider />
-        <div className="color__container">
+        <div
+          className="color__container"
+          onClick={() => this.props.setColors (color.primary, color.secondary)}
+        >
           <div className="color__square" style={{background: color.primary}}>
             <div
               className="color__overlay"
@@ -153,4 +158,4 @@ class ColorPanel extends Component {
   }
 }
 
-export default ColorPanel;
+export default connect (null, {setColors}) (ColorPanel);
