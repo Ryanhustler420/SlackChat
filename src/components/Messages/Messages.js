@@ -7,6 +7,7 @@ import MessageForm from './MessageForm';
 import Message from './Message';
 import {setUserPost} from './../../actions/index';
 import {connect} from 'react-redux';
+import Typing from './Typing';
 
 class Messages extends Component {
   state = {
@@ -218,6 +219,11 @@ class Messages extends Component {
             {searchTerm
               ? this.displayMessages (searchResult)
               : this.displayMessages (messages)}
+            <div style={{display: 'flex', alignItems: 'center'}}>
+              <span className="user__typing">Gaurav is typing...</span>
+              {' '}
+              <Typing />
+            </div>
           </Comment.Group>
         </Segment>
 
