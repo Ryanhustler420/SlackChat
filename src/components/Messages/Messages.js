@@ -8,6 +8,7 @@ import Message from './Message';
 import {setUserPost} from './../../actions/index';
 import {connect} from 'react-redux';
 import Typing from './Typing';
+import Skeleton from './Skeleton';
 
 class Messages extends Component {
   state = {
@@ -246,6 +247,13 @@ class Messages extends Component {
       </div>
     ));
 
+  displayMessagesSkeleton = loading =>
+    loading
+      ? <React.Fragment>
+          {[...Array(10)].map ((_, i) => <Skeleton key={i} />)}
+        </React.Fragment>
+      : null;
+
   render () {
     // prettier-ignore
     const {
@@ -260,7 +268,8 @@ class Messages extends Component {
       searchLoading,
       privateChannel,
       isChannelStarrd,
-      typingUsers
+      typingUsers,
+      messagesLoading
     } = this.state;
 
     return (
@@ -279,6 +288,7 @@ class Messages extends Component {
           <Comment.Group
             className={ProgressBar ? 'messages__progress' : 'messages'}
           >
+            {this.displayMessagesSkeleton (messagesLoading)}
             {searchTerm
               ? this.displayMessages (searchResult)
               : this.displayMessages (messages)}
