@@ -39,6 +39,16 @@ class Messages extends Component {
     }
   }
 
+  componentDidUpdate () {
+    if (this.messagesEnd) {
+      this.scrollToBottom ();
+    }
+  }
+
+  scrollToBottom = () => {
+    this.messagesEnd.scrollIntoView ({behavior: 'smooth'});
+  };
+
   addUserStarsListener = (channelId, userId) => {
     this.state.userRef
       .child (userId)
@@ -273,6 +283,7 @@ class Messages extends Component {
               ? this.displayMessages (searchResult)
               : this.displayMessages (messages)}
             {this.displayTypingUsers (typingUsers)}
+            <div ref={node => (this.messagesEnd = node)} />
           </Comment.Group>
         </Segment>
 
