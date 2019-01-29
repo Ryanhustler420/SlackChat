@@ -103,7 +103,11 @@ class MessageForm extends Component {
     this.setState ({[event.target.name]: event.target.value});
   };
 
-  handleKeyDown = () => {
+  handleKeyDown = event => {
+    if (event.ctrlKey && event.keyCode === 13) {
+      this.sendMessage ();
+    }
+
     const {message, typingRef, channel, user} = this.state;
 
     if (message) {
@@ -224,7 +228,7 @@ class MessageForm extends Component {
               : ''
           }
           ref={node => (this.messageInputRef = node)}
-          placeholder="Write your message"
+          placeholder="Write your message  ::[Ctrl + enter] to send message"
         />
         <Button.Group icon widths="2">
           <Button
