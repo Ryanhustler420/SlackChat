@@ -2601,3 +2601,74 @@ service firebase.storage {
 }
 
 ```
+
+<!-- Deploying using npm package -->
+
+##### install
+
+> npm i -g firebase-tools
+> C:/Program Files/User/firebase login
+
+> firebase init
+
+```
+
+C:\Users\TimeMAchine\Documents\GitHub\SlackChat>firebase init
+
+    ######## #### ########  ######## ########     ###     ######  ########
+    ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+    ######    ##  ########  ######   ########  #########  ######  ######
+    ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+    ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\TimeMAchine\Documents\GitHub\SlackChat
+
+? Are you ready to proceed? (Y/n) : y <- [press y]
+
+////////////////
+
+? Which Firebase CLI features do you want to setup for this folder? Press Space to select features, then Enter to co
+nfirm your choices.
+(*) Database: Deploy Firebase Realtime Database Rules
+( ) Firestore: Deploy rules and create indexes for Firestore
+( ) Functions: Configure and deploy Cloud Functions
+( ) Hosting: Configure and deploy Firebase Hosting sites
+>(*) Storage: Deploy Cloud Storage security rules
+
+
+######## Now select which project you want to deploy
+
+######## Now Hit Return Key Each Time
+
+######## Now there must be a file name .firebase in your directory structure, see that first
+
+######## Now run `npm run build`
+```
+
+> add this code to your firebase.json
+
+```json
+
+{
+  "hosting": {
+    "public": "./build" // <- this line
+  },
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  }
+}
+
+
+```
+
+> Now run 
+
+``
+firebase deploy
+
+``
